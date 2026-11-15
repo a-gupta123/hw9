@@ -1,6 +1,7 @@
 // ─────────────────────────────────────────────────────────────────
 //  CROSSY ROAD  –  game.js
 // ─────────────────────────────────────────────────────────────────
+import { movementTarget, scoreAfterMove, ufoCollision } from './logic.js';
 
 // ── Constants ────────────────────────────────────────────────────
 const TILE        = 2;
@@ -830,30 +831,22 @@ function enqueue(dir) {
 
 function startJump(dir) {
   if (jumping || dead) return;
-  let dRow = 0, dCol = 0;
-  if (dir === 'forward')  dRow =  1;
-  if (dir === 'backward') dRow = -1;
-  if (dir === 'left')     dCol = -1;
-  if (dir === 'right')    dCol =  1;
 
-  const newRow = playerRow + dRow;
-  const newCol = Math.max(-HALF_W, Math.min(HALF_W, playerCol + dCol));
+  const move = movementTarget(playerRow, playerCol, dir, HALF_W);
+  if (!move) return;
 
-  if (dir === 'left'  && newCol === playerCol) return;
-  if (dir === 'right' && newCol === playerCol) return;
-  if (newRow < 0) return;   // back fence — can't go behind the start row
+  playerRow = move.row;
+  playerCol = move.col;
 
-  playerRow = newRow;
-  playerCol = newCol;
-
-  if (dRow > 0 && playerRow > score) {
-    score = playerRow;
+  const next = scoreAfterMove(score, playerRow, move.dRow);
+  if (next !== score) {
+    score = next;
     document.getElementById('score').textContent = score;
   }
 
   ridingLog = null;
   jumpFrom.copy(chicken.position);
-  jumpTo.set(newCol * TILE, 0, -newRow * TILE);
+  jumpTo.set(move.col * TILE, 0, -move.row * TILE);
   jumpFaceY = FACE[dir];
   jumpStart = performance.now();
   jumping   = true;
@@ -871,13 +864,14 @@ function checkCollisions() {
   const cx = chicken.position.x;
 
   if (rd.type === 'road') {
-    for (const car of rd.cars) {
-      const hl = (car.userData.halfLen || 0.75) + 0.15;
-      if (Math.abs(car.position.x - cx) < hl) {
-        // Knocked over in the direction the saucer was travelling
-        triggerDeath('ufo', { dir: rd.dir });
-        return;
-      }
+    const hit = ufoCollision(cx, rd.cars.map((car) => ({
+      x: car.position.x,
+      halfLen: car.userData.halfLen,
+    })));
+    if (hit) {
+      // Knocked over in the direction the saucer was travelling
+      triggerDeath('ufo', { dir: rd.dir });
+      return;
     }
   }
 
