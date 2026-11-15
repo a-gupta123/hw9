@@ -10,6 +10,10 @@ test("a UFO outside its radius is a miss", () => {
   assert.equal(ufoCollision(0, [{ x: 2, halfLen: 0.8 }]), false);
 });
 
+test("a UFO to the left and outside its radius is a miss", () => {
+  assert.equal(ufoCollision(0, [{ x: -2, halfLen: 0.8 }]), false);
+});
+
 test("standing exactly on the hit radius is not a hit", () => {
   // halfLen 0.85 → radius 1. Distance 1 fails the strict < check.
   assert.equal(ufoCollision(0, [{ x: 1, halfLen: 0.85 }]), false);
