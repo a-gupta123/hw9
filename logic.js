@@ -3,7 +3,7 @@
 // Next hop, or null when the move is blocked by the side or back boundary.
 export function movementTarget(row, col, dir, halfW) {
   let dRow = 0, dCol = 0;
-  if (dir === 'forward')  dRow =  2;
+  if (dir === 'forward')  dRow =  1;
   if (dir === 'backward') dRow = -1;
   if (dir === 'left')     dCol = -1;
   if (dir === 'right')    dCol =  1;
