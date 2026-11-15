@@ -1,0 +1,4 @@
+model: Grok 4.7
+The saved transcript does not name a model. This line is the session identity.
+tests changed by this fix: no
+git diff HEAD -- tests is empty.

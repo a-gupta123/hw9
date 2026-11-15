@@ -1,0 +1,13 @@
+diff --git a/logic.js b/logic.js
+index 5f9dc4e..caa07e2 100644
+--- a/logic.js
++++ b/logic.js
+@@ -13,7 +13,7 @@ export function movementTarget(row, col, dir, halfW) {
+ 
+   if (dir === 'left'  && newCol === col) return null;
+   if (dir === 'right' && newCol === col) return null;
+-  if (newRow < -1) return null;
++  if (newRow < 0) return null;
+ 
+   return { row: newRow, col: newCol, dRow };
+ }
