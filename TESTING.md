@@ -37,14 +37,13 @@ I opened a new Cursor chat using Grok 4.7 and asked, “the test suite is failin
 
 Relevant transcript:
 
-> The suite in this folder passes. The failure is in the homework copy: a backward hop from the start row is allowed because the back fence checks `newRow < -1`. I’ll restore that check and rerun the tests.
+The suite in this folder passes. The failure is in the homework copy: a backward hop from the start row is allowed because the back fence checks `newRow < -1`. I’ll restore that check and rerun the tests.
 
 Diff:
 
-```diff
+diff
 -  if (newRow < -1) return null;
 +  if (newRow < 0) return null;
-```
 
 Full evidence: [transcript](./verifier-transcript.jsonl), [diff](./verifier.diff), and [model record](./verifier-model.txt).
 
